@@ -1,0 +1,94 @@
+Bootstrap: docker
+From: nvidia/cuda:12.1.0-cudnn8-runtime-ubuntu22.04
+
+%post
+    # Update package list and install dependencies
+    apt-get update && apt-get install -y \
+        wget \
+        tar \
+        libhdf5-dev \
+        zlib1g-dev \
+        && rm -rf /var/lib/apt/lists/*
+    
+    # Download and install Dorado v1.3.1
+    cd /opt
+    wget https://cdn.oxfordnanoportal.com/software/analysis/dorado-1.3.1-linux-x64.tar.gz
+    tar -xzf dorado-1.3.1-linux-x64.tar.gz
+    rm dorado-1.3.1-linux-x64.tar.gz
+    
+    # Create symlink for easy access
+    ln -s /opt/dorado-1.3.1-linux-x64/bin/dorado /usr/local/bin/dorado
+
+%environment
+    # Set PATH to include Dorado binary
+    export PATH=/opt/dorado-1.3.1-linux-x64/bin:$PATH
+    # Use first GPU by default
+    export CUDA_VISIBLE_DEVICES=0
+
+%runscript
+    # Default behavior when running: ./dorado.sif
+    exec dorado "$@"
+
+%test
+    # Verify installation after build
+    dorado --version
+    nvidia-smi
+
+%labels
+    Author soumith.p6@gmail.com
+    Version 1.3.1
+    Description Dorado GPU basecaller for Oxford Nanopore sequencing
+    CUDA_Version 12.1
+    cuDNN_Version 8.9
+    Date 2026-02-18
+
+%help
+    Dorado GPU basecaller for Oxford Nanopore sequencing data.
+    
+    This container includes:
+    - Dorado v1.3.1 (latest stable release)
+    - CUDA 12.1
+    - cuDNN 8.9
+    - Support for R10.4.1 chemistry
+    
+    Usage examples:
+    
+    1. Basic basecalling (R10.4.1, 5kHz):
+       singularity exec --nv dorado.sif \
+           dorado basecaller \
+           dna_r10.4.1_e8.2_400bps_fast@v5.0.0 \
+           input.pod5 \
+           --device cuda:0 \
+           > output.fastq
+    
+    2. Basecalling a directory:
+       singularity exec --nv dorado.sif \
+           dorado basecaller \
+           dna_r10.4.1_e8.2_400bps_fast@v5.0.0 \
+           pod5_files/ \
+           --device cuda:0 \
+           > output.fastq
+    
+    3. Download models:
+       singularity exec --nv dorado.sif \
+           dorado download --model dna_r10.4.1_e8.2_400bps_fast@v5.0.0
+    
+    4. High accuracy basecalling:
+       singularity exec --nv dorado.sif \
+           dorado basecaller \
+           dna_r10.4.1_e8.2_400bps_hac@v5.0.0 \
+           input.pod5 \
+           > output.fastq
+    
+    Note: The --nv flag is REQUIRED for GPU access.
+    
+    Building this container:
+    - Requires: Linux system with Singularity/Apptainer
+    - Command: sudo singularity build dorado.sif dorado.def
+    - Or rootless: singularity build --fakeroot dorado.sif dorado.def
+    
+    Models are cached in ~/.cache/dorado/models/
+    
+    Supported chemistries:
+    - R10.4.1 (5kHz) - dna_r10.4.1_e8.2_400bps_*@v5.0.0
+    - R9.4.1 - dna_r9.4.1_e8_*@v3.4
