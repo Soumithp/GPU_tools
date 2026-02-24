@@ -1,0 +1,58 @@
+======================================================================
+ESM2 PROTEIN EMBEDDING ANALYSIS - SUMMARY
+======================================================================
+
+Input file: proteins.fasta (2).txt
+File format: FASTA
+Number of proteins: 5
+Model: ESM2-650M (33 layers, 1280-dimensional embeddings)
+Processing device: cuda
+
+PROTEINS ANALYZED:
+----------------------------------------------------------------------
+1. HBA_HUMAN
+   Length: 142 amino acids
+   First 60 aa: MVLSPADKTNVKAAWGKVGAHAGEYGAEALERMFLSFPTTKTYFPHFDLSHGSAQVKGHG
+
+2. HBB_HUMAN
+   Length: 147 amino acids
+   First 60 aa: MVHLTPEEKSAVTALWGKVNVDEVGGEALGRLLVVYPWTQRFFESFGDLSTPDAVMGNPK
+
+3. INS_HUMAN
+   Length: 110 amino acids
+   First 60 aa: MALWMRLLPLLALLALWGPDPAAAFVNQHLCGSHLVEALYLVCGERGFFYTPKTRREAED
+
+4. G3P_HUMAN
+   Length: 333 amino acids
+   First 60 aa: MVKVGVNGFGRIGRLVTRAAFNSGKVDIVAINDPFIDLNYMVYMFQYDSTHGKFHGTVKA
+
+5. LYSC_HUMAN
+   Length: 147 amino acids
+   First 60 aa: MRSLLILVLCFLPLAALGKVFGRCELAAAMKRHGLDNYRGYSLGNWVCAAKFESNFNTQA
+
+======================================================================
+PAIRWISE SIMILARITIES (Cosine)
+======================================================================
+HBA_HUMAN                      ↔ HBB_HUMAN                     : 0.9789
+HBA_HUMAN                      ↔ INS_HUMAN                     : 0.8889
+HBA_HUMAN                      ↔ G3P_HUMAN                     : 0.9151
+HBA_HUMAN                      ↔ LYSC_HUMAN                    : 0.9507
+HBB_HUMAN                      ↔ INS_HUMAN                     : 0.9056
+HBB_HUMAN                      ↔ G3P_HUMAN                     : 0.9415
+HBB_HUMAN                      ↔ LYSC_HUMAN                    : 0.9659
+INS_HUMAN                      ↔ G3P_HUMAN                     : 0.8622
+INS_HUMAN                      ↔ LYSC_HUMAN                    : 0.9258
+G3P_HUMAN                      ↔ LYSC_HUMAN                    : 0.9293
+
+======================================================================
+OUTPUT FILES:
+======================================================================
+For each protein:
+  • {name}_embedding.npy - NumPy array of embeddings
+  • {name}_info.txt - Sequence and statistics
+
+Visualization:
+  • protein_embeddings_visualization.png
+
+Summary:
+  • analysis_summary.txt (this file)

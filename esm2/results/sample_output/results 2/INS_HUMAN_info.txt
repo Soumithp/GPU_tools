@@ -1,0 +1,16 @@
+Protein: INS_HUMAN
+Sequence length: 110 amino acids
+
+Sequence:
+MALWMRLLPLLALLALWGPDPAAAFVNQHLCGSHLVEALYLVCGERGFFYTPKTRREAED
+LQVGQVELGGGPGAGSLQPLALEGSLQKRGIVEQCCTSICSLYQLENYCN
+
+Embedding information:
+  Shape: (335, 1280)
+  Dimensions: 335 positions × 1280 features
+
+Statistics:
+  Mean: -0.001163
+  Std:  0.276490
+  Min:  -9.133069
+  Max:  2.900757
