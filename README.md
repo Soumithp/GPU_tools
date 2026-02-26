@@ -141,7 +141,7 @@ sbatch --gres=gpu:1 --mem=16G --wrap="\
 
 ```bash
 cd esm2
-conda env create -f environment.yml
+conda env create -f esm2_env.yml
 conda activate esm2_env
 ```
 
@@ -180,7 +180,7 @@ tool_name/
 ## 📊 Skills Demonstrated
 
 - **Container building:** Singularity `.def` files with CUDA integration, multi-stage builds
-- **Conda environment management:** Reproducible `environment.yml` with pinned versions and channel priority
+- **Conda environment management:** Reproducible `env.yml` with pinned versions and channel priority
 - **GPU software deployment:** PyTorch+CUDA, JAX+CUDA, GROMACS+CUDA across different frameworks
 - **Scientific workflow design:** Input validation, batch processing, automated visualization
 - **Documentation:** Clear READMEs with I/O specs, SLURM examples, downstream applications
