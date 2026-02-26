@@ -125,7 +125,7 @@ cd GPU_tools
 
 # Build any container (example: ESM2)
 cd esm2
-singularity build esm2.sif esm2_embedding.def
+singularity build esm2.sif esm2.def
 
 # Run with GPU passthrough
 singularity exec --nv esm2.sif python run_esm2.py \
