@@ -1,0 +1,21 @@
+name: rfdiffusion_env
+channels:
+  - pytorch
+  - nvidia
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.9
+  - pytorch=2.0.1
+  - pytorch-cuda=11.8
+  - numpy
+  - scipy
+  - matplotlib
+  - biopython
+  - pip
+  - pip:
+    - hydra-core
+    - pyrsistent
+    - e3nn
+    - opt_einsum_fx
+    - dgl==1.0.2+cu118 -f https://data.dgl.ai/wheels/cu118/repo.html

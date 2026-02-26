@@ -1,0 +1,47 @@
+name: colabfold_gpu
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+
+dependencies:
+  # Python
+  - python=3.10
+
+  # Core dependencies
+  - openmm=7.7.0
+  - pdbfixer=1.9
+  - kalign2=2.04
+  - hhsuite=3.3.0
+  - mmseqs2=14.7e284
+
+  # Scientific computing
+  - numpy=1.24.3
+  - scipy=1.11.3
+  - pandas=2.1.1
+  - matplotlib=3.8.0
+
+  # Jupyter
+  - jupyter=1.0.0
+  - ipykernel=6.25.2
+
+  # Package manager
+  - pip=23.3
+
+  # ColabFold and dependencies via pip
+  - pip:
+    - colabfold[alphafold]==1.5.5
+    - jax[cuda12_pip]==0.4.20
+    - dm-haiku==0.0.10
+    - biopython==1.81
+
+# Installation:
+# conda env create -f environment.yml
+# conda activate colabfold_gpu
+#
+# Download parameters (one-time, ~4GB):
+# python -m colabfold.download
+#
+# Verify:
+# python -c "import colabfold; print('ColabFold ready')"
+# python -c "import jax; print(f'JAX GPU: {jax.devices()}')"

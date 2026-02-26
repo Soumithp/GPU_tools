@@ -1,0 +1,19 @@
+name: boltz_env
+channels:
+  - pytorch
+  - nvidia
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.12
+  - pytorch=2.4.0
+  - pytorch-cuda=12.1
+  - numpy
+  - scipy
+  - matplotlib
+  - pip
+  - pip:
+    - boltz
+    - biopython
+    - py3Dmol
+    - pyyaml

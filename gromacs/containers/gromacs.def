@@ -1,0 +1,27 @@
+Bootstrap: docker
+From: nvcr.io/hpc/gromacs:2024.3
+
+%labels
+    Author Soumith
+    Version 1.0
+    Description GROMACS GPU-accelerated molecular dynamics simulation
+
+%post
+    apt-get update && apt-get install -y \
+        python3 python3-pip wget \
+        && rm -rf /var/lib/apt/lists/*
+
+    pip3 install numpy matplotlib biopython
+
+%environment
+    export PATH="/usr/local/gromacs/bin:$PATH"
+    export LD_LIBRARY_PATH="/usr/local/gromacs/lib:$LD_LIBRARY_PATH"
+
+%runscript
+    echo "GROMACS GPU-Accelerated MD Container"
+    echo "Usage: singularity exec --nv gromacs.sif gmx mdrun -deffnm md"
+    exec "$@"
+
+%test
+    gmx --version | head -5
+    echo "Container test passed"

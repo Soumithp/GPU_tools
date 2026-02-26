@@ -1,0 +1,60 @@
+Bootstrap: docker
+From: nvidia/cuda:12.1.0-cudnn8-runtime-ubuntu22.04
+
+%post
+    # Update and install dependencies
+    apt-get update && apt-get install -y \
+        wget \
+        git \
+        python3.10 \
+        python3-pip \
+        hmmer \
+        kalign \
+        && rm -rf /var/lib/apt/lists/*
+    
+    # Upgrade pip
+    python3 -m pip install --upgrade pip
+    
+    # Install JAX with CUDA support
+    pip3 install "jax[cuda12_pip]==0.4.20" -f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html
+    
+    # Install ColabFold
+    pip3 install colabfold[alphafold]==1.5.5
+    
+    # Install additional dependencies
+    pip3 install biopython==1.81 matplotlib==3.8.0
+    
+    # Download model parameters (~4GB, optional - can download at runtime)
+    # python3 -m colabfold.download /opt/colabfold_params
+
+%environment
+    export CUDA_VISIBLE_DEVICES=0
+    export XLA_PYTHON_CLIENT_PREALLOCATE=false
+
+%test
+    # Verify installations
+    python3 -c "import jax; print(f'JAX version: {jax.__version__}')"
+    python3 -c "import jax; print(f'JAX devices: {jax.devices()}')"
+    python3 -c "import colabfold; print('ColabFold installed')"
+
+%labels
+    Author soumith.p6@gmail.com
+    Version 1.5.5
+    Description ColabFold for protein structure prediction with GPU
+    JAX_Version 0.4.20
+    CUDA_Version 12.1
+
+%help
+    ColabFold: Fast protein structure prediction using AlphaFold2.
+    
+    Usage:
+        singularity exec --nv colabfold.sif \
+            colabfold_batch input.fasta output_dir/
+    
+    Note: The --nv flag is REQUIRED for GPU acceleration.
+    
+    Building:
+    - sudo singularity build colabfold.sif colabfold.def
+    - Or: singularity build --fakeroot colabfold.sif colabfold.def
+    
+    First run downloads ~4GB model parameters.

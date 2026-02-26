@@ -1,0 +1,33 @@
+======================================================================
+BOLTZ-2 STRUCTURE PREDICTION - SUMMARY
+======================================================================
+
+Input file: proteins.fasta.txt
+Proteins analyzed: 5
+Model: Boltz-2
+Processing time: 16.0 minutes
+
+PROTEINS:
+----------------------------------------------------------------------
+1. HBA_HUMAN (142 aa)
+   Sequence: MVLSPADKTNVKAAWGKVGAHAGEYGAEALERMFLSFPTTKTYFPHFDLSHGSAQVKGHG...
+
+2. HBB_HUMAN (147 aa)
+   Sequence: MVHLTPEEKSAVTALWGKVNVDEVGGEALGRLLVVYPWTQRFFESFGDLSTPDAVMGNPK...
+
+3. INS_HUMAN (110 aa)
+   Sequence: MALWMRLLPLLALLALWGPDPAAAFVNQHLCGSHLVEALYLVCGERGFFYTPKTRREAED...
+
+4. G3P_HUMAN (333 aa)
+   Sequence: MVKVGVNGFGRIGRLVTRAAFNSGKVDIVAINDPFIDLNYMVYMFQYDSTHGKFHGTVKA...
+
+5. LYSC_HUMAN (147 aa)
+   Sequence: MRSLLILVLCFLPLAALGKVFGRCELAAAMKRHGLDNYRGYSLGNWVCAAKFESNFNTQA...
+
+OUTPUT FILES:
+----------------------------------------------------------------------
+  • boltz_results/boltz_results_boltz_input/predictions/G3P_HUMAN/G3P_HUMAN_model_0.cif
+  • boltz_results/boltz_results_boltz_input/predictions/HBA_HUMAN/HBA_HUMAN_model_0.cif
+  • boltz_results/boltz_results_boltz_input/predictions/HBB_HUMAN/HBB_HUMAN_model_0.cif
+  • boltz_results/boltz_results_boltz_input/predictions/INS_HUMAN/INS_HUMAN_model_0.cif
+  • boltz_results/boltz_results_boltz_input/predictions/LYSC_HUMAN/LYSC_HUMAN_model_0.cif

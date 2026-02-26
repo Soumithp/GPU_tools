@@ -1,0 +1,49 @@
+Bootstrap: docker
+From: nvidia/cuda:12.1.1-runtime-ubuntu22.04
+
+%labels
+    Author Soumith
+    Version 1.0
+    Description Boltz-2 biomolecular structure and affinity prediction
+
+%post
+    apt-get update && apt-get install -y \
+        wget bzip2 ca-certificates curl git build-essential \
+        && rm -rf /var/lib/apt/lists/*
+
+    # Install Miniconda
+    wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O /tmp/miniconda.sh
+    bash /tmp/miniconda.sh -b -p /opt/conda
+    rm /tmp/miniconda.sh
+    export PATH="/opt/conda/bin:$PATH"
+
+    # Create environment
+    conda create -n boltz_env python=3.12 -y
+    . /opt/conda/etc/profile.d/conda.sh
+    conda activate boltz_env
+
+    # Install PyTorch with CUDA
+    conda install pytorch=2.4.0 pytorch-cuda=12.1 -c pytorch -c nvidia -y
+
+    # Install Boltz
+    pip install boltz biopython pyyaml matplotlib
+
+    conda clean -afy && pip cache purge
+
+%environment
+    export PATH="/opt/conda/bin:$PATH"
+    . /opt/conda/etc/profile.d/conda.sh
+    conda activate boltz_env
+
+%runscript
+    echo "Boltz-2 Structure Prediction Container"
+    echo "Usage: singularity exec --nv boltz.sif boltz predict input.yaml --out_dir results/"
+    exec "$@"
+
+%test
+    export PATH="/opt/conda/bin:$PATH"
+    . /opt/conda/etc/profile.d/conda.sh
+    conda activate boltz_env
+    python -c "import torch; print(f'PyTorch: {torch.__version__}')"
+    python -c "import boltz; print(f'Boltz: {boltz.__version__}')"
+    echo "Container test passed"

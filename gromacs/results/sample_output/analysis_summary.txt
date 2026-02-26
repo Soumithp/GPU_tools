@@ -1,0 +1,16 @@
+======================================================================
+GROMACS MOLECULAR DYNAMICS SIMULATION - SUMMARY
+======================================================================
+
+Input: 1AKI.pdb
+Force field: AMBER99SB-ILDN
+Water model: TIP3P
+Temperature: 300 K
+Pressure: 1.0 bar
+
+SIMULATION STEPS:
+  1. Energy Minimization: 47s
+  2. NVT Equilibration (100 ps): 20.6min
+  3. NPT Equilibration (100 ps): 19.6min
+  4. Production MD (500 ps): 100.1min
+  Total: 141.2 minutes
