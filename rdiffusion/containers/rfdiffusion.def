@@ -1,0 +1,146 @@
+Bootstrap: docker
+From: nvidia/cuda:11.8.0-cudnn8-devel-ubuntu22.04
+
+%labels
+    Author Soumith
+    Description RFdiffusion container for protein design (binder design + unconditional generation)
+    Version 1.0
+    RFdiffusion_commit main
+    CUDA 11.8
+    PyTorch 1.13.1
+    DGL 1.0.2+cu118
+    Python 3.9
+
+%post
+    # ============================================================
+    # System dependencies
+    # ============================================================
+    apt-get update && apt-get install -y --no-install-recommends \
+        wget git build-essential ca-certificates \
+        && rm -rf /var/lib/apt/lists/*
+
+    # ============================================================
+    # Install Miniconda
+    # ============================================================
+    wget -q https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O /tmp/miniconda.sh
+    bash /tmp/miniconda.sh -b -p /opt/conda
+    rm /tmp/miniconda.sh
+    export PATH=/opt/conda/bin:$PATH
+
+    # Remove defaults channel
+    conda config --remove channels defaults 2>/dev/null || true
+    conda config --add channels conda-forge
+    conda config --set channel_priority flexible
+
+    # ============================================================
+    # Clone RFdiffusion
+    # ============================================================
+    cd /opt
+    git clone https://github.com/RosettaCommons/RFdiffusion.git
+    cd RFdiffusion
+
+    # ============================================================
+    # Create conda environment
+    # Pinned versions based on official SE3nv.yml + community fixes
+    # 
+    # Known issues addressed:
+    #   - Original SE3nv.yml uses CUDA 11.1 which is too old for
+    #     many modern GPUs (A100, L40s need >= 11.8)
+    #   - DGL must match CUDA version exactly
+    #   - PyTorch channel must come before conda-forge to avoid
+    #     CPU-only pytorch being installed (GitHub issue #119)
+    #   - Python 3.9 kept because DGL builds are limited for 3.10+
+    # ============================================================
+    conda create -n SE3nv python=3.9 -y
+    
+    # Activate environment within container build
+    . /opt/conda/etc/profile.d/conda.sh
+    conda activate SE3nv
+
+    # PyTorch - use pytorch channel explicitly to get CUDA build
+    conda install -y pytorch=1.13.1 torchvision torchaudio \
+        pytorch-cuda=11.8 -c pytorch -c nvidia
+
+    # DGL - must match CUDA version (cu118)
+    pip install dgl==1.0.2+cu118 -f https://data.dgl.ai/wheels/cu118/repo.html
+
+    # RFdiffusion dependencies
+    pip install hydra-core omegaconf pyrsistent e3nn opt_einsum_fx
+
+    # ============================================================
+    # Install SE3-Transformer (NVIDIA implementation)
+    # This is the trickiest dependency - must be built from source
+    # ============================================================
+    cd /opt/RFdiffusion/env/SE3Transformer
+    pip install --no-cache-dir -r requirements.txt
+    python setup.py install
+
+    # Install RFdiffusion module
+    cd /opt/RFdiffusion
+    pip install -e .
+
+    # ============================================================
+    # Download model weights (~2.5 GB total)
+    # ============================================================
+    mkdir -p /opt/RFdiffusion/models
+    cd /opt/RFdiffusion/models
+
+    echo "Downloading RFdiffusion model weights..."
+    wget -q http://files.ipd.uw.edu/pub/RFdiffusion/6f5902ac237024bdd0c176cb93063dc4/Base_ckpt.pt
+    wget -q http://files.ipd.uw.edu/pub/RFdiffusion/e29311f6f1bf1af907f9ef9f44b8328b/Complex_base_ckpt.pt
+    wget -q http://files.ipd.uw.edu/pub/RFdiffusion/60f09a193fb5e5ccdc4980417708dbab/Complex_Fold_base_ckpt.pt
+    wget -q http://files.ipd.uw.edu/pub/RFdiffusion/5532d2e1f3a4738decd58b19d633b3c3/ActiveSite_ckpt.pt
+    wget -q http://files.ipd.uw.edu/pub/RFdiffusion/12fc204edeae5b57713c5ad7dcb97d39/Base_epoch8_ckpt.pt
+
+    echo "Weights downloaded:"
+    ls -lh /opt/RFdiffusion/models/
+
+    # ============================================================
+    # Cleanup
+    # ============================================================
+    conda clean -afy
+    pip cache purge
+
+%environment
+    export PATH=/opt/conda/bin:$PATH
+    export PATH=/opt/conda/envs/SE3nv/bin:$PATH
+    export DGLBACKEND=pytorch
+
+%runscript
+    cd /opt/RFdiffusion
+    exec python ./scripts/run_inference.py "$@"
+
+%test
+    # Quick sanity check that imports work
+    export PATH=/opt/conda/envs/SE3nv/bin:$PATH
+    python -c "import torch; print('PyTorch:', torch.__version__)"
+    python -c "import dgl; print('DGL:', dgl.__version__)"
+    python -c "from rfdiffusion.inference.model_runners import InferenceModel; print('RFdiffusion: OK')"
+    echo "Container tests passed"
+
+%help
+    RFdiffusion container for protein backbone generation and binder design.
+    Built with CUDA 11.8, PyTorch 1.13.1, DGL 1.0.2.
+
+    Usage examples:
+
+    # Unconditional monomer generation (100 residues, 10 designs)
+    singularity run --nv rfdiffusion.sif \
+        inference.output_prefix=output/monomer \
+        inference.num_designs=10 \
+        'contigmap.contigs=[100-100]'
+
+    # Binder design against a target PDB
+    singularity run --nv rfdiffusion.sif \
+        inference.output_prefix=output/binder \
+        inference.input_pdb=target.pdb \
+        inference.num_designs=10 \
+        'contigmap.contigs=[A1-150/0 80-120]' \
+        'ppi.hotspot_res=[A30,A33,A34]' \
+        inference.ckpt_override_path=/opt/RFdiffusion/models/Complex_base_ckpt.pt
+
+    Build this container:
+        singularity build rfdiffusion.sif rfdiffusion.def
+
+    Requires: singularity with --fakeroot or root access for build
+    Requires: NVIDIA GPU with --nv flag for runtime

@@ -3,7 +3,7 @@
 Ran all env installs on my MacBook Air M4 with Miniconda.  
 Removed `defaults` channel, using only conda-forge (+ bioconda/pytorch/nvidia where needed).
 
-No NVIDIA GPU locally so CUDA stuff shows False — that's expected. GPU runs done on Colab.
+No NVIDIA GPU locally so CUDA stuff shows False,  GPU runs done on Colab.
 
 ---
 
@@ -24,7 +24,7 @@ matplotlib: 3.10.8
 biopython: OK
 ```
 
-Everything installed first try. Interesting that conda-forge has GROMACS 2026.0 already.
+Interesting that conda-forge has GROMACS 2026.0 already.
 
 ## Dorado — works
 
@@ -39,7 +39,7 @@ numpy: 2.2.6
 biopython: OK
 ```
 
-Note: dorado itself isn't on conda — ONT distributes it as a standalone binary. This env covers the downstream analysis tools (samtools, minimap2, pod5 for format conversion).
+
 
 ## ESM2 — works
 
@@ -82,9 +82,3 @@ matplotlib: OK
 ```
 
 This one took the longest to solve dependencies (~5 min) but installed without errors. The colabfold_batch CLI is available which is what you'd use for batch predictions on HPC.
-
-## RFdiffusion — Singularity only
-
-Didn't try conda for this one. The authors themselves say they can only guarantee CUDA 11.1 and users need to customize for their setup. SE3-Transformer + DGL + specific PyTorch/CUDA combos make a portable conda env impractical.
-
-Singularity container def is in `rfdiffusion/rfdiffusion_design.def`. Ran binder design and unconditional generation through the official Colab notebook — output PDBs are in `rfdiffusion/results/sample_output/`.
