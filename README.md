@@ -2,8 +2,6 @@
 
 A comprehensive, ready-to-deploy collection of GPU-accelerated bioinformatics tools for structural biology and genomics research. Each tool includes a **Conda environment**, **Singularity container definition**, **Google Colab notebook**, **sample data**, and **documentation** — enabling reproducible, portable deployment on any HPC cluster with NVIDIA GPUs.
 
-> **Built by Soumith** | Computational Biologist | Demonstrating end-to-end GPU tool packaging, containerization, and scientific software administration.
-
 ---
 
 ## Why This Repository?
