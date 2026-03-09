@@ -557,6 +557,21 @@ For capacity planning:
 
 **Bottom line:** ColabFold uses AlphaFold2's neural network but with optimized MSA generation, making it 10-40x faster without sacrificing accuracy.
 
+
+
+## Example: Drosophila Hedgehog Structure Prediction
+
+Predicted the full-length Drosophila Hedgehog protein (471 aa, UniProt Q02936) using the official ColabFold notebook on Google Colab (T4 GPU). AlphaFold2-ptm, 5 models, 3 recycles.
+
+The protein has three domains:
+- Signal peptide (1-84): low pLDDT, expected for disordered regions
+- N-terminal signaling domain (85-254): high confidence, this is the secreted active fragment
+- C-terminal autoprocessing domain (255-471): good confidence, self-cleaving catalytic domain
+
+PAE shows strong intra-domain confidence but weak inter-domain predictions — consistent with the biology since the N- and C-terminal domains are cleaved apart in vivo.
+
+Analysis script: `notebooks/analyse_colabfold_results.py`
+Results: `results/sample_output/colabfold_analysis.png`
 ---
 
 ## Citations

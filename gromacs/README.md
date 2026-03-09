@@ -117,14 +117,62 @@ sbatch --gres=gpu:1 --mem=16G --wrap="\
 - **Stability analysis:** Compare wild-type vs mutant protein stability
 - **Pipeline integration:** Structure prediction (ColabFold/Boltz) → MD simulation → Analysis
 
-## Resource Requirements
+## Example: Lysozyme MD Simulation
 
-| Resource | CPU Only | GPU Accelerated |
-|----------|----------|-----------------|
-| Time (1 ns) | ~2-4 hours | ~15-30 min |
-| RAM | 4 GB | 8 GB |
-| GPU VRAM | N/A | 2+ GB |
-| Disk | 1-10 GB per ns | Same |
+Tested locally on macOS (Apple Silicon M4, CPU-only). For GPU runs, use `gmx mdrun -nb gpu`.
+
+**Setup:**
+```bash
+conda activate gromacs_env
+cd gromacs/notebooks
+python setup_simulation.py    # downloads PDB + creates parameter files
+cd sim
+```
+
+**Run simulation steps (one at a time in terminal):**
+```bash
+# Generate topology (select option 6 for AMBER99SB-ILDN)
+gmx pdb2gmx -f 1AKI.pdb -o processed.gro -water tip3p -ignh
+
+# Define box and solvate
+gmx editconf -f processed.gro -o boxed.gro -c -d 1.0 -bt dodecahedron
+gmx solvate -cp boxed.gro -cs spc216.gro -o solvated.gro -p topol.top
+
+# Add ions
+gmx grompp -f ions.mdp -c solvated.gro -p topol.top -o ions.tpr -maxwarn 1
+echo "SOL" | gmx genion -s ions.tpr -o ions.gro -p topol.top -pname NA -nname CL -neutral
+
+# Energy minimization (~1 min)
+gmx grompp -f em.mdp -c ions.gro -p topol.top -o em.tpr
+gmx mdrun -v -deffnm em
+
+# NVT equilibration — 100 ps (~5-10 min on CPU)
+gmx grompp -f nvt.mdp -c em.gro -r em.gro -p topol.top -o nvt.tpr
+gmx mdrun -v -deffnm nvt
+
+# NPT equilibration — 100 ps (~5-10 min)
+gmx grompp -f npt.mdp -c nvt.gro -r nvt.gro -t nvt.cpt -p topol.top -o npt.tpr -maxwarn 1
+gmx mdrun -v -deffnm npt
+
+# Production MD — 200 ps (~10-15 min on CPU)
+gmx grompp -f md.mdp -c npt.gro -t npt.cpt -p topol.top -o md.tpr
+gmx mdrun -v -deffnm md
+```
+
+**Analysis:**
+```bash
+echo "Backbone Backbone" | gmx rms -s md.tpr -f md.xtc -o rmsd.xvg -tu ps
+echo "Protein" | gmx gyrate -s md.tpr -f md.xtc -o gyrate.xvg
+echo "Temperature" | gmx energy -f nvt.edr -o temperature.xvg
+echo "Potential" | gmx energy -f em.edr -o potential.xvg
+
+cd ..
+python plot_results.py
+```
+
+**Results:** Backbone RMSD stabilized at ~0.07 nm. Radius of gyration held steady at ~1.43 nm. Temperature maintained at 300 ± 4 K. See `results/sample_output/gromacs_analysis.png`.
+
+
 
 ## References
 

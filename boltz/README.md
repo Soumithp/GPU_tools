@@ -111,6 +111,16 @@ sbatch --gres=gpu:1 --mem=32G --wrap="\
 | Disk | 5 GB (weights) | 10 GB |
 | CUDA | 12.1+ | 12.x |
 
+
+
+## Example: Drosophila Hedgehog Structure Prediction
+
+Ran Boltz-2 on full-length Drosophila Hedgehog (471 aa, UniProt Q02936). Sequence fetched directly from UniProt REST API to avoid manual copy-paste errors.
+
+Note: Boltz is strict about FASTA headers — standard UniProt headers with pipe characters (`|`) cause parsing errors. Headers need to be simple (e.g., `>protein_Q02936`). This is the kind of thing worth documenting for users.
+
+Results: `results/sample_output/`
+
 ## References
 
 - Passaro, S. et al. (2025). Boltz-2: Towards Accurate and Efficient Binding Affinity Prediction. *bioRxiv*. doi: 10.1101/2025.06.14.659707

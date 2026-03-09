@@ -242,6 +242,21 @@ See `results/sample_output/basecalls.fastq` for real output from Google Colab de
 - **Date:** February 2026
 
 ---
+## Example: ONT Basecalling with Four Features
+
+Ran Dorado v1.4.0 on ONT's official basecalling demo dataset (~1,100 reads, R10.4.1 chemistry) on Google Colab (T4 GPU). Demonstrated four Dorado features in one run:
+
+1. **Standard basecalling** (sup model) — raw signals to DNA sequences
+2. **Modified base detection** (5mCG_5hmCG) — epigenetic methylation calls
+3. **Basecall + alignment** (built-in minimap2) — single-command workflow
+4. **Dorado summary** — per-read QC metrics
+
+Generated a 6-panel quality report covering read length distribution, quality scores, GC content, length vs quality, cumulative yield, and per-position quality.
+
+Results: `results/dorado_all_results/dorado_quality_report.png`
+
+
+
 
 ## Model Availability (v1.3.1)
 

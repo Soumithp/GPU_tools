@@ -482,6 +482,17 @@ A complete interactive demo is available for running ESM2 on free Tesla T4 GPU:
 
 ---
 
+## Example: Drosophila Hedgehog Pathway Analysis
+
+Ran ESM2-650M on five proteins from the Drosophila Hedgehog signaling pathway (Hedgehog, Smoothened, Cubitus interruptus, Patched, Engrailed). These are real UniProt sequences chosen because Hedgehog signaling is a major research area in Drosophila developmental biology.
+```bash
+conda activate esm2_env
+cd esm2/notebooks
+python esm2_real_data.py
+```
+
+Generates pairwise cosine similarity matrix, PCA clustering, predicted contact maps, and per-residue embedding heatmaps. Ran on Mac CPU in about 3 minutes. See `results/sample_output/esm2_drosophila_analysis.png`.
+
 ## References & Resources
 
 ### Official Documentation
