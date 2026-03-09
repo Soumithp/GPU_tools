@@ -1,0 +1,32 @@
+ColabFold Structure Prediction — Analysis Summary
+=======================================================
+
+Protein: Drosophila melanogaster Hedgehog (Hh)
+UniProt: Q02936
+Length: 471 amino acids
+Method: AlphaFold2-ptm via ColabFold
+MSA: MMseqs2 server
+Models: 5 (ranked by pLDDT)
+
+Model Rankings:
+-------------------------------------------------------
+  Rank 1: mean pLDDT = 77.5, pTM = 0.590
+  Rank 2: mean pLDDT = 77.1, pTM = 0.530
+  Rank 3: mean pLDDT = 76.5, pTM = 0.650
+  Rank 4: mean pLDDT = 75.5, pTM = 0.600
+  Rank 5: mean pLDDT = 75.2, pTM = 0.520
+
+Best Model Confidence Breakdown:
+  Very high (pLDDT >= 90): 243 residues (51.6%)
+  High (70-90):            87 residues
+  Medium (50-70):          52 residues
+  Low (<50):               89 residues
+
+Domain Analysis:
+  Signal peptide (1-84): typically disordered, low pLDDT expected
+  N-terminal signaling (85-254): secreted fragment, active in Hh pathway
+  C-terminal autoprocessing (255-471): catalytic, self-cleaving
+
+The PAE plot shows strong intra-domain confidence but weaker
+inter-domain predictions, consistent with the known biology —
+the N-terminal and C-terminal domains are cleaved apart in vivo.

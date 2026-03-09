@@ -1,0 +1,13 @@
+[2026-03-08 19:36:34.369] [info] Running: "basecaller" "sup,5mCG_5hmCG" "dorado_data/wf-basecalling-demo/input/PAW70337_66b2eea5_de8117b1_1.1k.pod5"
+[2026-03-08 19:36:34.390] [info]  - downloading dna_r10.4.1_e8.2_400bps_sup@v5.2.0 with httplib
+[2026-03-08 19:36:41.753] [info]  - downloading dna_r10.4.1_e8.2_400bps_sup@v5.2.0_5mCG_5hmCG@v2 with httplib
+[2026-03-08 19:36:45.613] [info] > Creating basecall pipeline
+[2026-03-08 19:36:45.915] [info] Using CUDA devices:
+[2026-03-08 19:36:45.915] [info] cuda:0 - Tesla T4
+[2026-03-08 19:36:47.424] [info] Calculating optimized batch size for GPU "Tesla T4" and model dna_r10.4.1_e8.2_400bps_sup@v5.2.0. Full benchmarking will run for this device, which may take some time.
+[2026-03-08 19:36:55.558] [info] cuda:0 using chunk size 12288, batch size 160
+[2026-03-08 19:36:57.786] [info] cuda:0 using chunk size 6144, batch size 224
+[2026-03-08 19:43:05.063] [info] > Finished in (ms): 365470
+[2026-03-08 19:43:05.063] [info] > Simplex reads basecalled: 1000
+[2026-03-08 19:43:05.063] [info] > Basecalled @ Samples/s: 5.976688e+05
+[2026-03-08 19:43:05.066] [info] > Finished

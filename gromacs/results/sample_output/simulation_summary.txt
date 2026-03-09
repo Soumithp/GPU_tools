@@ -1,0 +1,12 @@
+GROMACS MD Simulation Summary
+========================================
+
+System: Lysozyme (PDB: 1AKI)
+Force field: AMBER99SB-ILDN
+Water model: TIP3P
+Temperature: 300 K
+Production run: 200 ps
+
+Backbone RMSD (mean, 2nd half): 0.073 nm
+Radius of gyration (mean): 1.427 nm
+Temperature stability: 300.0 ± 1.9 K

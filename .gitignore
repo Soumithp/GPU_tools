@@ -30,3 +30,43 @@ __pycache__/
 *.bam
 *.sam
 *.cram
+
+cat > .gitignore << 'EOF'
+# Large binary files
+*.trr
+*.xtc
+*.cpt
+*.edr
+*.tpr
+*.npy
+*.bam
+*.bam.bai
+*.fastq
+*.npz
+*.pkl
+
+# Keep these
+!*.png
+!*.txt
+!*.csv
+!*.json
+!*.fasta
+!*.pdb
+!*.cif
+!*.py
+!*.ipynb
+!*.yml
+!*.def
+!*.sh
+!*.mdp
+!*.xvg
+!*.md
+!*.a3m
+!*.tsv
+
+# Temp files
+\#*\#
+*.swp
+.DS_Store
+__pycache__/
+EOF

@@ -1,0 +1,29 @@
+Dorado Basecalling Analysis Summary
+==================================================
+
+Dorado version: 1.4.0
+Data source: ONT official demo dataset (R10.4.1)
+
+Features Demonstrated:
+  1. Standard basecalling (sup model): 352.3s
+  2. Modified base detection (5mCG_5hmCG): 391.8s
+  3. Basecall + alignment (built-in minimap2): 370.9s
+  4. Per-read QC summary (dorado summary)
+
+Basecalling Results:
+  Total reads: 1003
+  Total bases: 16,854,598
+  Mean read length: 16804 bp
+  Median read length: 14055 bp
+  Longest read: 92,487 bp
+  Mean quality: Q39.5
+  Mean GC: 40.4%
+  Reads >= Q20: 888/1003
+
+Output Files:
+  basecalled.fastq         — standard basecalls (FASTQ)
+  modbase.bam              — basecalls + methylation tags (MM/ML)
+  aligned_sorted.bam       — basecalls aligned to reference
+  aligned_sorted.bam.bai   — BAM index
+  read_summary.tsv         — per-read QC metrics
+  dorado_quality_report.png — 6-panel quality analysis

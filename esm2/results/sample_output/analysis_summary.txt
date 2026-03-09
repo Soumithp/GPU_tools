@@ -1,0 +1,32 @@
+ESM2 Embedding Analysis — Drosophila Hedgehog Pathway
+=======================================================
+
+Model: ESM2-650M (esm2_t33_650M_UR50D)
+Device: cpu
+Processing time: 8.3s
+
+Proteins analyzed:
+  HH_DROME (Protein hedgehog) — 279 aa
+  SMO_DROME (Protein smoothened) — 277 aa
+  CI_DROME (Protein cubitus interruptus) — 277 aa
+  PTT_DROME (Protein patched) — 277 aa
+  EN_DROME (Protein engrailed) — 277 aa
+
+Pairwise cosine similarities:
+  HH_DROME     ↔ SMO_DROME   : 0.9744
+  HH_DROME     ↔ CI_DROME    : 0.9357
+  HH_DROME     ↔ PTT_DROME   : 0.9808
+  HH_DROME     ↔ EN_DROME    : 0.9452
+  SMO_DROME    ↔ CI_DROME    : 0.9381
+  SMO_DROME    ↔ PTT_DROME   : 0.9778
+  SMO_DROME    ↔ EN_DROME    : 0.9433
+  CI_DROME     ↔ PTT_DROME   : 0.9625
+  CI_DROME     ↔ EN_DROME    : 0.9699
+  PTT_DROME    ↔ EN_DROME    : 0.9679
+
+Biological interpretation:
+  The Hedgehog signaling pathway is critical in Drosophila
+  embryonic development. ESM2 embeddings capture functional
+  relationships — proteins with similar roles in the pathway
+  (e.g., receptor/ligand pairs) cluster together in embedding
+  space, even without sequence homology.

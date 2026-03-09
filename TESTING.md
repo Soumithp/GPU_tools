@@ -1,9 +1,9 @@
 # Conda Environment Testing
 
-Ran all env installs on my MacBook Air M4 with Miniconda.  
+Ran all env installs on my MacBook Air M4 with Miniconda.
 Removed `defaults` channel, using only conda-forge (+ bioconda/pytorch/nvidia where needed).
 
-No NVIDIA GPU locally so CUDA stuff shows False,  GPU runs done on Colab.
+No NVIDIA GPU locally so CUDA stuff shows False — that's expected. GPU runs done on Colab.
 
 ---
 
@@ -24,7 +24,9 @@ matplotlib: 3.10.8
 biopython: OK
 ```
 
-Interesting that conda-forge has GROMACS 2026.0 already.
+Everything installed first try. Interesting that conda-forge has GROMACS 2026.0 already.
+
+**Real data test:** Ran a full MD simulation on hen egg-white lysozyme (PDB: 1AKI, 129 residues). AMBER99SB-ILDN force field, TIP3P water model, 200 ps production run at 300 K. Backbone RMSD stabilized around 0.07 nm, Rg stayed steady at ~1.43 nm. Temperature held at 300 ± 4 K. All expected behavior for a stable globular protein.
 
 ## Dorado — works
 
@@ -39,7 +41,9 @@ numpy: 2.2.6
 biopython: OK
 ```
 
+Dorado binary is distributed standalone by ONT. This env covers downstream analysis tools.
 
+**Real data test:** Ran Dorado v1.4.0 on ONT official basecalling demo dataset (~1.1k reads, R10.4.1 chemistry). Tested four features: standard basecalling (sup model), modified base detection (5mCG_5hmCG), basecall + alignment (built-in minimap2), and dorado summary for per-read QC. Generated 6-panel quality report showing read length distribution, quality scores, GC content, and per-position quality.
 
 ## ESM2 — works
 
@@ -54,7 +58,9 @@ fair-esm: OK
 scikit-learn: OK
 ```
 
-CUDA False because no NVIDIA GPU on Mac — on an HPC node with GPU it picks it up automatically. Ran the full embedding workflow on Colab with T4, works fine.
+CUDA False on Mac — expected. On HPC with GPU it picks up automatically.
+
+**Real data test:** Ran ESM2-650M on five Drosophila Hedgehog signaling pathway proteins (Hedgehog, Smoothened, Cubitus interruptus, Patched, Engrailed). Generated per-residue embeddings, pairwise cosine similarity matrix, PCA clustering, and predicted contact maps. Ran locally on Mac CPU in about 3 minutes.
 
 ## Boltz-2 — works
 
@@ -67,7 +73,7 @@ boltz: 2.2.1
 pyyaml: OK
 ```
 
-Clean install. Prediction needs GPU at runtime.
+**Real data test:** Ran Boltz-2 on full-length Drosophila Hedgehog protein (471 aa, UniProt Q02936). Sequence fetched directly from UniProt REST API. Note: Boltz requires simple FASTA headers — standard UniProt headers with pipe characters cause parsing errors. Generated predicted structure and confidence scores.
 
 ## ColabFold — works
 
@@ -81,4 +87,10 @@ usage: colabfold_batch [-h] [--msa-only]
 matplotlib: OK
 ```
 
-This one took the longest to solve dependencies (~5 min) but installed without errors. The colabfold_batch CLI is available which is what you'd use for batch predictions on HPC.
+**Real data test:** Predicted structure of full-length Drosophila Hedgehog protein (471 aa, UniProt Q02936) using the official ColabFold notebook (AlphaFold2-ptm, 5 models, 3 recycles). Best model had mean pLDDT in the expected range — N-terminal signaling domain showed high confidence, signal peptide region showed lower confidence as expected for disordered regions. Generated pLDDT per-residue plots, PAE heatmap, model comparison, contact maps, and per-domain Rg analysis.
+
+## RFdiffusion — Singularity only
+
+Didn't try conda for this one. The authors themselves say they can only guarantee CUDA 11.1 and users need to customize for their setup. SE3-Transformer + DGL + specific PyTorch/CUDA combos make a portable conda env impractical.
+
+Singularity container def is in `rfdiffusion/rfdiffusion_design.def`. Ran binder design and unconditional generation through the official Colab notebook — output PDBs are in `rfdiffusion/results/sample_output/`.
